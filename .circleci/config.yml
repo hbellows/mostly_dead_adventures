@@ -8,11 +8,10 @@ jobs:
           PGHOST: localhost
           PGUSER: mostly_dead_dnd
           RAILS_ENV: test
-      - image: postgres:9.5
+      - image: circleci/postgres:11
         environment:
           POSTGRES_USER: mostly_dead_dnd
           POSTGRES_DB: mostly_dead_dnd_test
-          POSTGRES_PASSWORD: ""
 
     steps:
       - checkout
