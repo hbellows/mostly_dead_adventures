@@ -10,7 +10,9 @@ jobs:
           RAILS_ENV: test
       - image: circleci/postgres:11
         environment:
-          POSTGRES_USER: postgres
+          POSTGRES_USER: mostly_dead_dnd
+          POSTGRES_DB: mostly_dead_dnd_test
+          POSTGRES_PASSWORD: password
 
     steps:
       - checkout
