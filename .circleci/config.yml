@@ -10,8 +10,7 @@ jobs:
           RAILS_ENV: test
       - image: circleci/postgres:11
         environment:
-          POSTGRES_USER: mostly_dead_dnd
-          POSTGRES_DB: mostly_dead_dnd_test
+          POSTGRES_USER: postgres
 
     steps:
       - checkout
@@ -31,8 +30,6 @@ jobs:
 
       # Bundle install dependencies
       - run: bundle install --path vendor/bundle
-
-      - run: -e POSTGRES_PASSWORD=password
 
       #Cache Dependencies
       - type: cache-save
