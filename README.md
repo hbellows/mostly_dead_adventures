@@ -1,5 +1,5 @@
 [![CircleCI](https://circleci.com/gh/hbellows/widgets.svg?style=svg)](https://circleci.com/gh/hbellows/mostly_dead_dnd)
-[![Maintainability](https://api.codeclimate.com/v1/badges/62d8a795fc71cc751823/maintainability)](https://codeclimate.com/github/hbellows/mostly_dead_dnd/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/c0021b2989aff80a48ae/maintainability)](https://codeclimate.com/github/hbellows/mostly_dead_dnd/maintainability)
 [![codecov.io](https://codecov.io/gh/hbellows/mostly_dead_dnd/branch/master/graph/badge.svg)](https://codecov.io/gh/hbellows/mostly_dead_dnd)
 
 
