@@ -11,8 +11,8 @@ jobs:
       - image: circleci/postgres:11
         environment:
           POSTGRES_DB: mostly_dead_dnd_test
-          #POSTGRES_USER: mostly_dead_dnd
-          #POSTGRES_PASSWORD: password
+          POSTGRES_USER: mostly_dead_dnd
+          POSTGRES_PASSWORD: password
 
     steps:
       - checkout
