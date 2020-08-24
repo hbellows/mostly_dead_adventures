@@ -1,0 +1,55 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/mostly_dead_dnd
+    docker:
+      - image: circleci/ruby:2.7.1-node-browsers
+        environment:
+          PGHOST: localhost
+          PGUSER: mostly_dead_dnd
+          RAILS_ENV: test
+      - image: circleci/postgres:11
+        environment:
+          POSTGRES_USER: mostly_dead_dnd
+          POSTGRES_DB: mostly_dead_dnd_test
+          POSTGRES_PASSWORD: password
+
+    steps:
+      - checkout
+
+      #Restore Cached Dependencies
+      - type: cache-restore
+        name: Restore bundle cache
+        key: mostly_dead_dnd-{{ checksum "Gemfile.lock" }}
+
+      # Bundler 2.0 Issues with CircleCI
+      - run:
+          name: Configure Bundler
+          command: |
+            echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
+            source $BASH_ENV
+            gem install bundler
+
+      # Bundle install dependencies
+      - run: bundle install --path vendor/bundle
+
+      #Cache Dependencies
+      - type: cache-save
+        name: Store bundle cache
+        key: mostly_dead_dnd-{{ checksum "Gemfile.lock" }}
+        paths:
+          - vendor/bundle
+
+      # Wait for DB
+      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      # # Setup the environment
+      # - run: cp .sample.env .env
+
+      # Setup the database
+      - run: bundle exec rake db:{drop,create,migrate,seed}
+
+      # Run the tests
+      - run: bundle exec rake
+
+# NOTE: Add ENV['EXECJS_RUNTIME'] = 'Node' to config/boot.rb to fix js runtime errors in Rails 5.2
