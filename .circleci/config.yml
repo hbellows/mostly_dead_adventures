@@ -30,11 +30,6 @@ jobs:
             source $BASH_ENV
             gem install bundler
 
-      # Precompile assests for webpacker
-      - run:
-          name: Build assets
-          command: bundle exec rails assets:precompile
-
       # Bundle install dependencies
       - run: bundle install --path vendor/bundle
 
