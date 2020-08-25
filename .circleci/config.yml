@@ -8,10 +8,11 @@ jobs:
           PGHOST: localhost
           PGUSER: mostly_dead_dnd
           RAILS_ENV: test
+          NODE_ENV: test
       - image: circleci/postgres:11
         environment:
-          POSTGRES_USER: mostly_dead_dnd
           POSTGRES_DB: mostly_dead_dnd_test
+          POSTGRES_USER: mostly_dead_dnd
           POSTGRES_PASSWORD: password
 
     steps:
@@ -20,7 +21,7 @@ jobs:
       #Restore Cached Dependencies
       - type: cache-restore
         name: Restore bundle cache
-        key: mostly_dead_dnd-{{ checksum "Gemfile.lock" }}
+        key: mostly_dead_dnd-{{ checksum "Gemfile.lock" }}-{{ checksum "yarn.lock" }}
 
       # Bundler 2.0 Issues with CircleCI
       - run:
@@ -32,13 +33,16 @@ jobs:
 
       # Bundle install dependencies
       - run: bundle install --path vendor/bundle
+      - run: yarn install
+      - run: bin/rails webpacker:compile
 
       #Cache Dependencies
       - type: cache-save
         name: Store bundle cache
-        key: mostly_dead_dnd-{{ checksum "Gemfile.lock" }}
+        key: mostly_dead_dnd-{{ checksum "Gemfile.lock" }}-{{ checksum "yarn.lock" }}
         paths:
           - vendor/bundle
+          - public/packs-test
 
       # Wait for DB
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
@@ -47,9 +51,22 @@ jobs:
       # - run: cp .sample.env .env
 
       # Setup the database
-      - run: bundle exec rake db:{drop,create,migrate,seed}
+      - run: bundle exec rake db:{create,migrate,seed}
 
       # Run the tests
-      - run: bundle exec rake
+      - run: bundle exec rspec
 
 # NOTE: Add ENV['EXECJS_RUNTIME'] = 'Node' to config/boot.rb to fix js runtime errors in Rails 5.2
+
+yarn_install:
+  steps:
+    - restore_cache:
+        keys:
+          - yarn-cache-v1-{{ checksum "yarn.lock" }}
+          - yarn-cache-v1-
+    - run: yarn install --cache-folder ~/.cache/yarn
+    - run: bundle exec rake webpacker:compile
+    - save_cache:
+        key: yarn-cache-v1-{{ checksum "yarn.lock" }}
+        paths:
+          - ~/.cache/yarn

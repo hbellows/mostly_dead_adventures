@@ -64,6 +64,10 @@ RSpec.configure do |config|
       :progress_mark  => ' ',
       :remainder_mark => "\u{FF65}"
   }
+
+  config.before(:suite) do
+    Webpacker.compile
+  end
 end
 
 Shoulda::Matchers.configure do |config|
