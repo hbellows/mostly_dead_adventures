@@ -64,12 +64,12 @@ RSpec.configure do |config|
       :progress_mark  => ' ',
       :remainder_mark => "\u{FF65}"
   }
-
-  # https://github.com/rails/webpacker/issues/59
-  config.before :suite do
-    `bin/webpack`
-    # Webpacker::Manifest.load
-  end
+  #
+  # # https://github.com/rails/webpacker/issues/59
+  # config.before :suite do
+  #   'bin/webpack'
+  #   Webpacker::Manifest.load
+  # end
 end
 
 Shoulda::Matchers.configure do |config|

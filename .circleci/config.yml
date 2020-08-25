@@ -22,6 +22,11 @@ jobs:
         name: Restore bundle cache
         key: mostly_dead_dnd-{{ checksum "Gemfile.lock" }}
 
+      # Precompile assests for webpacker
+      - run:
+          name: Build assets
+          command: bundle exec rails assets:precompile
+
       # Bundler 2.0 Issues with CircleCI
       - run:
           name: Configure Bundler
@@ -47,7 +52,7 @@ jobs:
       # - run: cp .sample.env .env
 
       # Setup the database
-      - run: bundle exec rake db:{drop,create,migrate,seed}
+#      - run: bundle exec rake db:{drop,create,migrate,seed}
 
       # Run the tests
       - run: bundle exec rake
