@@ -22,11 +22,6 @@ jobs:
         name: Restore bundle cache
         key: mostly_dead_dnd-{{ checksum "Gemfile.lock" }}
 
-      # Precompile assests for webpacker
-      - run:
-          name: Build assets
-          command: bundle exec rails assets:precompile
-
       # Bundler 2.0 Issues with CircleCI
       - run:
           name: Configure Bundler
@@ -34,6 +29,11 @@ jobs:
             echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
             source $BASH_ENV
             gem install bundler
+
+      # Precompile assests for webpacker
+      - run:
+          name: Build assets
+          command: bundle exec rails assets:precompile
 
       # Bundle install dependencies
       - run: bundle install --path vendor/bundle
